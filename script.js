@@ -201,21 +201,22 @@ document.querySelector("#begin").addEventListener("click", e => {
   const contCh3 = document.getElementById("cont_ch3");
   const contDevice = document.getElementById("device");
   
-  let typewriter = gsap.timeline({});
+  let typewriter = gsap.timeline({
+    delay: 1
+  });
   var charsPerSecond = 25;
 
-  function typing(target, content, delay) {
+  function typing(target, content) {
   typewriter.to(target, {
       duration: content.length / charsPerSecond,
       text: content,
-      ease: "none" , 
-      delay: delay
+      ease: "none"
     });
   }
 
   document.querySelector("#intro .time_icon").style.display = "flex";
 
-  typing("#log_time_intro", "The time is 09:04 Earth Standard Time.", 1.5);
+  typing("#log_time_intro", "The time is 09:04 Earth Standard Time.");
   typing("#log_text_intro_1", "ASSIGNMENT LOG.");
   typing("#log_text_intro_2", "My spacecraft has just landed on CERACUS IV. No technical difficulties as had been seen with CERACUS III. Wind speed is much less of a concern here, though upon entering the atmosphere, I was immediately met with heavy rainfall.");
   typing("#log_text_intro_3", "Initial reports by H.U.G.O. show significant ocean on this moon, with three medium-sized landmasses. No activity suggests intelligent life can be found here anymore, though significant urban ruin has led me to the current landing point on the moon’s largest continent. I did have to maneuver manually during descent in order to avoid the remains of what appears to have once been a large dome, which has shattered outward. Potentially used to keep out the rain.");
@@ -232,7 +233,7 @@ document.querySelector("#begin").addEventListener("click", e => {
     typing("#log_time_ch1", "12:43 E.S.T");
     typing("#log_text_ch1_1", "Rain shows no sign of slowing, but I have hiked through much of the destroyed settlement. H.U.G.O. has been collecting samples along the way. Levels of sodium chloride are strangely high for rainwater, though flora so far has been recorded by H.U.G.O.’s comparison system as indicative of marine life. Let the record show I’m walking on land. It’s not what I was expecting for the heart of the Imperial historia.");
     typing("#log_text_ch1_2", "[…]");
-    typing("#log_text_ch1_3", "Then again, I’ve been nothing if not frequently surprised in these last eight years.", 0.5);
+    typing("#log_text_ch1_3", "Then again, I’ve been nothing if not frequently surprised in these last eight years.");
   });
 
   contCh2.addEventListener("click", e => {
@@ -251,7 +252,7 @@ document.querySelector("#begin").addEventListener("click", e => {
       autoAlpha: 0
     }, {
       autoAlpha: 1
-    }, 0);
+    });
 
     typing("#log_text_ch2_2", "c;/files/archive_id_08071081/");
     typing("#log_text_ch2_3", "Archives were once the very heart of Imperial society and function. These histories were detailed, complex, and for much of the later life of the Empire recorded using especially convoluted devices. We know the devices were convoluted because the drives the information is stored on are also especially convoluted. No one on Earth has been able to uncover their meanings. It would help, of course, if we had ever been able to find one of these devices.");
@@ -279,6 +280,60 @@ let device = gsap.timeline({
   ease: "expo.inOut",
   duration: 1
 });
+
+document.querySelector("#exitDirection").addEventListener("click", e => {
+  device.fromTo(".device_direction", {
+    autoAlpha: 1
+  }, {
+    autoAlpha: 0
+  });
+
+  device.fromTo([".weather_title", ".weather_info .info", ".keys_inacitve_head h3"], {
+    autoAlpha: 0, 
+    stagger: {
+      amount: 0.1,
+      from: "random"
+    },
+    delay: 2.5
+  }, {
+    autoAlpha: 1
+  }, 2.5);
+
+  device.fromTo(".key", {
+    autoAlpha: 0, 
+    stagger: 0.1,
+  }, {
+    autoAlpha: 1
+  }, 3.5);
+
+  device.fromTo([".head_data", ".head_connect", ".foot_buttons", ".foot .id", ".node", ".game_insert"], {
+    autoAlpha: 0, 
+    stagger: {
+      amount: 0.1,
+      from: "random"
+    },
+  }, {
+    autoAlpha: 1
+  }, 4.5);
+});
+
+// gsap.fromTo("#node", {
+//   scale: 1
+// }, {
+//   scale: 1.25,
+//   duration: 2.5, 
+//   repeat: -1, 
+//   ease: "power4.inOut"
+// });
+
+document.querySelector("#enterDirection").addEventListener("click", e => {
+  device.fromTo(".device_direction", {
+    autoAlpha: 0
+  }, {
+    autoAlpha: 1
+  });
+});
+
 document.querySelector("#device").addEventListener("click", e => {
   device.fromTo(".narration_wrap", {
     autoAlpha: 1
@@ -293,8 +348,44 @@ document.querySelector("#device").addEventListener("click", e => {
 });
 
 // Draggable game
+const droppables = document.querySelectorAll(".key");
+const dropArea = document.getElementById("insert");
+const overlapThreshold = "5%";
 
+// Utility to add/remove class
+function addClass(el, className) {
+  el.classList.add(className);
+}
 
+function removeClass(el, className) {
+  el.classList.remove(className);
+}
 
-// AOS SCROLL 
-AOS.init();
+function hasClass(el, className) {
+  return el.classList.contains(className);
+}
+
+Draggable.create(droppables, {
+  bounds: window,
+  inertia: true,
+  onDrag: function () {
+    if (this.hitTest(dropArea, overlapThreshold)) {
+      addClass(this.target, "highlight");
+    } else {
+      removeClass(this.target, "highlight");
+    }
+  },
+  onDragEnd: function () {
+    if (droppables.parent) {
+      var rect1 = element.getBoundingClientRect();
+      var rect2 = tile.parent.element.getBoundingClientRect();
+      x = "+=" + (rect2.left - rect1.left + (rect2.width - rect1.width) / 2);
+      y = "+=" + (rect2.top - rect1.top + (rect2.height - rect1.height) / 2);
+    }
+    gsap.to(this.target, {
+      duration: 0.2,
+      x: 0,
+      y: 0
+    });
+  }
+});

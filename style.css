@@ -393,7 +393,7 @@
   #cont_ch1 {
     display: flex;
   }
-  #cont_ch2, #cont_ch3, #device, .time_icon {
+  #cont_ch2, #cont_ch3, #device, .log .time_icon {
     display: none;
   }
   #ch2 aside {
@@ -405,6 +405,42 @@
   
   
   /* DEVICE */
+  /* Directions */
+  .device_direction {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: center;
+    align-items: center;
+    row-gap: var(--base);
+    background-color: var(--secondary-50);
+    backdrop-filter: var(--blur);
+    z-index: 200;
+  }
+  .direction {
+    width: 40%;
+    height: auto;
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: center;
+    align-items: center;
+    row-gap: var(--base);
+  }
+  .direction .log_time {
+    padding: 0 0 var(--base);
+  }
+  .direction aside {
+    width: 100%;
+    padding: var(--base);
+  }
+  .weather_title, .weather_info .info, .keys_inacitve_head h3, .key, .head_data, .head_connect, .foot_buttons, .foot .id, .node, .game_insert {
+    opacity: 0.0;
+  }
+
   /* General */
   .device_wrap {
     position: absolute;
@@ -413,6 +449,7 @@
     width: 100vw;
     height: 100vh;
     opacity: 0;
+    overflow: hidden;
     z-index: 5;
   }
   .device {
@@ -528,18 +565,17 @@
     flex-flow: column nowrap;
     align-items: center;
     justify-content: flex-start;
-    row-gap: calc(var(--base) * 2.25);
+    row-gap: calc(var(--base) * 2);
     padding: calc(var(--base) * 2.25) 0;
     border: var(--border);
     border-radius: var(--corners);
     background-color: var(--primary-15);
-    overflow-x: visible;
-    overflow-y: scroll;
   }
   .key {
     position: relative;
     width: 300px;
     height: auto;
+    float: left;
     z-index: 150;
   }
   .key img {
@@ -578,6 +614,16 @@
     fill: var(--inactive);
     stroke: var(--inactive);
     filter: var(--glow-inactive);
+  }
+  .key:active .input_icon svg {
+    fill: var(--primary-100);
+    stroke: var(--primary-100);
+    filter: var(--glow-small);
+  }
+  .highlight .input_icon svg {
+    fill: var(--active);
+    stroke: var(--active);
+    filter: var(--glow-active);
   }
   .input_text {
     position: relative;
@@ -753,6 +799,9 @@
   .insert svg {
     width: auto;
     height: var(--base);
+  }
+  .highlight .insert {
+    display: none;
   }
   .screen_game {
     width: 100%;
