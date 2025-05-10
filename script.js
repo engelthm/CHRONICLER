@@ -260,7 +260,7 @@ document.querySelector("#begin").addEventListener("click", e => {
     typing("#log_text_ch2_5", "[The crunching of glass underfoot.]");
     typing("#log_text_ch2_6",  "This room is mostly rubble, which isn’t exactly conducive, but I’ll try to sift through some of it. If that doesn’t work—");
     typing("#log_text_ch2_7", "[...]");
-    typing("#log_text_ch2_8", "I’ve found something. It looks like a tablet. If tablets were, you know, made of copper. There looks to be a slot on the side that…could this…?");
+    typing("#log_text_ch2_8", "I’ve found something. It looks like a tablet. If tablets were, you know, made of iron. There looks to be a slot on the side that…could this…?");
   });
 
   contCh3.addEventListener("click", e => {
@@ -271,7 +271,7 @@ document.querySelector("#begin").addEventListener("click", e => {
 
     typing("#log_text_ch3_1", "I can’t believe it. After years of searching. H.U.G.O., translate what you can.");
     typing("#log_text_ch3_2", "This thing is a mess. Probably the age of it. But my God the amount of information this holds. It goes back centuries. This is incredible. I <i>think</i>.");
-    typing("#log_text_ch3_3", "Let the record show I’m going to attempt to sort the information out—if I make sense of it, that may just mean assignment complete. I may just be able to go home.");
+    typing("#log_text_ch3_3", "Let the record show I’m going to attempt to sort the data out—if I make sense of it, that may just mean assignment complete. I may just be able to go home.");
   });
 });
 
@@ -319,7 +319,7 @@ document.querySelector("#exitDirection").addEventListener("click", e => {
       amount: 0.5,
       ease: "power4.inOut"
     },
-  }, 1.5);
+  }, 3.5);
 });
 
 
@@ -364,6 +364,8 @@ const hitArea = document.querySelector(".game_insert");
 
 Draggable.create(".fake_key", {
   bounds: window,
+  type: "x,y",
+  force3D: true,
   onPress: function(){
     console.log(this.origX, this.origY);
     if(!this.origX || !this.origY){
@@ -380,7 +382,7 @@ Draggable.create(".fake_key", {
       gsap.to(this.target,{ 
         x: 0, 
         y: 0, 
-        duration: .35, 
+        duration: 0.35, 
         ease: "back.out(1.7)" 
       });
     } else {
@@ -400,8 +402,12 @@ Draggable.create(".fake_key", {
       
       gsap.to(this.target, {
         x: this.x - (b.left - a.left),
-        y: this.y - (b.top - a.top)
+        y: this.y - (b.top - a.top), 
       });
+      gsap.to(this.target, {
+        duration: 0.5,
+        clipPath: "polygon(0 0, 35% 0, 35% 100%, 0 100%)"
+      }, 0);
 
       gsap.fromTo(".fake_key_read", {
         autoAlpha: 0
@@ -409,18 +415,20 @@ Draggable.create(".fake_key", {
         autoAlpha: 1
       });
       gsap.to(".fake_key_read_scramble", {
-        duration: 2.5, 
+        duration: 1.5, 
         scrambleText: "Reading Key..."
       });
-      gsap.fromTo(".artifact_image", {
+      gsap.fromTo(".artifact_wrap", {
         autoAlpha: 0
       }, {
-        autoAlpha: 1
+        autoAlpha: 1, 
+        delay: 2.25
       });
       gsap.fromTo(".fake_key_read", {
         autoAlpha: 1
       }, {
-        autoAlpha: 0
+        autoAlpha: 0, 
+        delay: 2
       });
     }
   }
@@ -431,6 +439,15 @@ document.querySelector("#close").addEventListener("click", e => {
     autoAlpha: 1
   }, {
     autoAlpha: 0
+  });
+  removeClass(this.target, "highlight");
+  document.querySelector(".game_insert").style.visibility = "visible";
+
+  gsap.to(this.target,{ 
+    x: 0, 
+    y: 0, 
+    duration: .35, 
+    ease: "back.out(1.7)" 
   });
 });
 
@@ -447,5 +464,52 @@ document.querySelector("#sort").addEventListener("click", e => {
   });
 });
 
-
 // Draggable to nodes
+const hitNode = document.querySelector(".node");
+
+Draggable.create(".artifact_drag", {
+  bounds: ".device",
+  dragResistance: 0,
+  type: "x,y",
+  inertia: false,
+  force3D: true,
+  edgeResistance: 0.65,
+  throwResistance: 1000,
+  overshootTolerance: 0,
+  onDragEnd:function(pointerEvent) {
+    const hit = this.hitTest(hitNode);
+    if(!hit) {
+      gsap.to(this.target,{ 
+        x: 0, 
+        y: 0, 
+        duration: 0.35, 
+        ease: "back.out(1.7)" 
+      });
+    } else {
+      const a = hitNode.getBoundingClientRect();
+      const b = this.target.getBoundingClientRect();
+      
+      gsap.to(this.target, {
+        x: this.x - (b.left - a.left),
+        y: this.y - (b.top - a.top), 
+      });
+      gsap.fromTo(".node.two", {
+        autoAlpha: 0
+      }, {
+        autoAlpha: 1
+      });
+      gsap.fromTo(".fake_key", {
+        autoAlpha: 1
+      }, {
+        autoAlpha: 0
+      });
+      gsap.to(".node_connect", {
+      ease: "power4.inOut",
+        autoAlpha: 1,
+        scaleX: 1, 
+        transformOrigin: "left center", 
+        duration: 1.5
+      });
+    }
+  }
+});

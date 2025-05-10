@@ -417,8 +417,8 @@
     justify-content: center;
     align-items: center;
     row-gap: var(--base);
-    background-color: var(--secondary-50);
-    backdrop-filter: var(--blur);
+    background-color: var(--secondary-75);
+    /* backdrop-filter: var(--blur); */
     z-index: 200;
   }
   .direction {
@@ -585,7 +585,7 @@
   .fake_key.highlight {
     z-index: 4!important;
     margin: 0 0 0 -157px;
-    clip-path: polygon(0 0, 35% 0, 35% 100%, 0 100%);
+    /* clip-path: polygon(0 0, 35% 0, 35% 100%, 0 100%); */
   }
   .key img {
     position: relative;
@@ -708,7 +708,6 @@
     align-items: center;
     justify-content: center;
     column-gap: var(--base);
-    /* border: 2px solid red; */
   }
   .data, .connect, .id, .foot_buttons {
     display: flex;
@@ -799,7 +798,6 @@
     left: -98px;
     width: 200px;
     height: 100px;
-    background-color: red;
   }
   .insert {
     padding: 0 0 0 calc(var(--base) * 1.5);
@@ -851,8 +849,8 @@
     bottom: 17.5%;
     left: 10%;
   }
-  .node:nth-child(2) {
-    display: none;
+  .node.two {
+    opacity: 0.0!important;
     bottom: 42.5%;
     left: 35%;
   }
@@ -881,10 +879,21 @@
     top: 12.5%;
     right: 10%;
   }
+  .node_connect {
+    position: absolute;
+    bottom: 19.5%;
+    left: 11.5%;
+    opacity: 0.0;
+    width: 32%;
+    height: 0.5px;
+    transform: rotate(-38deg);
+    background-color: var(--primary-100);
+  }
 
 
   /* ARTIFACTS */
   .artifact_wrap {
+    opacity: 0.0;
     position: absolute;
     top: 0;
     right: 0;
@@ -933,9 +942,6 @@
   .artifact_note {
     width: 100%;
     justify-content: space-between;
-  }
-  .artifact_image {
-    visibility: hidden;
   }
   .artifact_image img {
     border: var(--border);
@@ -1001,13 +1007,24 @@
 
   /* Fake artifact */
   .artifact_drag {
-    display: none!important;
+    visibility: visible; 
+    opacity: 0; 
+    position: absolute;
+    top: 152.5px;
+    left: 35%;
+    margin: 0; 
+    transform: translate3d(0, 0, 0);
+    will-change: transform;
     width: auto;
     height: auto;
     display: flex;
     flex-flow: row nowrap;
     justify-content: flex-start;
     align-items: center;
+    backdrop-filter: var(--blur);
+    z-index: 5;
+    transition: opacity 0.3s ease;
+    touch-action: none; 
   }
   .fake_node {
     width: var(--accent);
