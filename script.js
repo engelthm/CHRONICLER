@@ -11,32 +11,32 @@ const ball = new Cotton("#ball", {
 
 // CUSTOM TOOLTIPS BY TIPPY.JS
 tippy("[title]", {
-    theme: "custom",
-    duration: 0,
-    arrow: false,
-    animation: "shift-toward-subtle",
-    followCursor: true,
-    zIndex: 9999999999,
-    content(reference) {
-      const title = reference.getAttribute("title");
-      reference.removeAttribute("title");
-      return title;
-    },
-  });
+  theme: "custom",
+  duration: 0,
+  arrow: false,
+  animation: "shift-toward-subtle",
+  followCursor: true,
+  zIndex: 9999999999,
+  content(reference) {
+    const title = reference.getAttribute("title");
+    reference.removeAttribute("title");
+    return title;
+  },
+});
   
   
 // HOWLER.JS 
 // Background music
 const sound = new Howl({
-    src: "Assets/Audio/Ambient/Chronicler Background.mp3",
-    autoplay: true,
-    loop: true,
-    volume: 0.5, 
-    onplayerror: function() {
-        sound.once("unlock", function() {
-        sound.play();
-        });
-    }
+  src: "Assets/Audio/Ambient/Chronicler Background.mp3",
+  autoplay: true,
+  loop: true,
+  volume: 0.5, 
+  onplayerror: function() {
+    sound.once("unlock", function() {
+    sound.play();
+    });
+  }
 });
 
 const playAudio = document.getElementById("play");
@@ -55,10 +55,10 @@ pauseAudio.addEventListener("click", function() {
 
 // FX music
 const soundHover = new Howl({
-    src: "Assets/Audio/FX/Notification.wav",
-    autoplay: false,
-    loop: false,
-    volume: 0.75,
+  src: "Assets/Audio/FX/Notification.wav",
+  autoplay: false,
+  loop: false,
+  volume: 0.75,
 });
 const soundClick = new Howl({
   src: "Assets/Audio/FX/Click.wav",
@@ -161,7 +161,7 @@ loader.fromTo("#load_text", {
 }, 3.5)
 loader.from("#bar_move", {
   scaleX: 0, 
-  transformOrigin:"left center", 
+  transformOrigin: "left center", 
   duration: 2.5
 }, 4);
 loader.fromTo(".load_bar", {
@@ -288,34 +288,40 @@ document.querySelector("#exitDirection").addEventListener("click", e => {
     autoAlpha: 0
   });
 
-  device.fromTo([".weather_title", ".weather_info .info", ".keys_inacitve_head h3"], {
+  const soundFlicker = new Howl({
+    src: "Assets/Audio/FX/Load.wav",
+    autoplay: true,
+    loop: false,
+    volume: 0.75,
+  });
+  soundFlicker.play();
+
+  let deviceStagger = gsap.utils.toArray([".weather_title", ".weather_info .info", ".keys_inacitve_head h3", ".head_data", ".head_connect", ".foot_buttons", ".foot .id", ".node", ".game_insert"]);
+  device.fromTo(deviceStagger, {
     autoAlpha: 0, 
-    stagger: {
-      amount: 0.1,
-      from: "random"
-    },
-    delay: 2.5
   }, {
-    autoAlpha: 1
+    autoAlpha: 1, 
+    stagger: {
+      amount: 0.25,
+      from: "random",
+      repeat: 1, 
+      ease: "power4.inOut"
+    },
+    delay: 1,
   }, 2.5);
 
-  device.fromTo(".key", {
-    autoAlpha: 0, 
-    stagger: 0.1,
+  let keysStagger = gsap.utils.toArray(".key");
+  device.fromTo(keysStagger, {
+    autoAlpha: 0
   }, {
-    autoAlpha: 1
-  }, 3.5);
-
-  device.fromTo([".head_data", ".head_connect", ".foot_buttons", ".foot .id", ".node", ".game_insert"], {
-    autoAlpha: 0, 
+    autoAlpha: 1, 
     stagger: {
-      amount: 0.1,
-      from: "random"
+      amount: 0.5,
+      ease: "power4.inOut"
     },
-  }, {
-    autoAlpha: 1
-  }, 4.5);
+  }, 1.5);
 });
+
 
 // gsap.fromTo("#node", {
 //   scale: 1
@@ -347,45 +353,99 @@ document.querySelector("#device").addEventListener("click", e => {
   }, 2);
 });
 
-// Draggable game
-const droppables = document.querySelectorAll(".key");
-const dropArea = document.getElementById("insert");
-const overlapThreshold = "5%";
-
-// Utility to add/remove class
+// Draggable keys
 function addClass(el, className) {
   el.classList.add(className);
 }
-
 function removeClass(el, className) {
   el.classList.remove(className);
 }
+const hitArea = document.querySelector(".game_insert");
 
-function hasClass(el, className) {
-  return el.classList.contains(className);
-}
-
-Draggable.create(droppables, {
+Draggable.create(".fake_key", {
   bounds: window,
-  inertia: true,
-  onDrag: function () {
-    if (this.hitTest(dropArea, overlapThreshold)) {
-      addClass(this.target, "highlight");
-    } else {
-      removeClass(this.target, "highlight");
+  onPress: function(){
+    console.log(this.origX, this.origY);
+    if(!this.origX || !this.origY){
+      this.origX = this.startX;
+      this.origY = this.startY;
     }
   },
-  onDragEnd: function () {
-    if (droppables.parent) {
-      var rect1 = element.getBoundingClientRect();
-      var rect2 = tile.parent.element.getBoundingClientRect();
-      x = "+=" + (rect2.left - rect1.left + (rect2.width - rect1.width) / 2);
-      y = "+=" + (rect2.top - rect1.top + (rect2.height - rect1.height) / 2);
+  onDragEnd:function(pointerEvent) {
+    const hit = this.hitTest(hitArea);
+    if(!hit) {
+      removeClass(this.target, "highlight");
+      document.querySelector(".game_insert").style.visibility = "visible";
+
+      gsap.to(this.target,{ 
+        x: 0, 
+        y: 0, 
+        duration: .35, 
+        ease: "back.out(1.7)" 
+      });
+    } else {
+      addClass(this.target, "highlight");
+      document.querySelector(".game_insert").style.visibility = "hidden";
+
+      const soundInsert = new Howl({
+        src: "Assets/Audio/FX/Click_Robot.wav",
+        autoplay: false,
+        loop: false,
+        volume: 0.75,
+      });
+      soundInsert.play();
+
+      const a = hitArea.getBoundingClientRect();
+      const b = this.target.getBoundingClientRect();
+      
+      gsap.to(this.target, {
+        x: this.x - (b.left - a.left),
+        y: this.y - (b.top - a.top)
+      });
+
+      gsap.fromTo(".fake_key_read", {
+        autoAlpha: 0
+      }, {
+        autoAlpha: 1
+      });
+      gsap.to(".fake_key_read_scramble", {
+        duration: 2.5, 
+        scrambleText: "Reading Key..."
+      });
+      gsap.fromTo(".artifact_image", {
+        autoAlpha: 0
+      }, {
+        autoAlpha: 1
+      });
+      gsap.fromTo(".fake_key_read", {
+        autoAlpha: 1
+      }, {
+        autoAlpha: 0
+      });
     }
-    gsap.to(this.target, {
-      duration: 0.2,
-      x: 0,
-      y: 0
-    });
   }
 });
+
+document.querySelector("#close").addEventListener("click", e => {
+  gsap.fromTo(".artifact_wrap", {
+    autoAlpha: 1
+  }, {
+    autoAlpha: 0
+  });
+});
+
+document.querySelector("#sort").addEventListener("click", e => {
+  gsap.fromTo(".artifact_wrap", {
+    autoAlpha: 1
+  }, {
+    autoAlpha: 0
+  });
+  gsap.fromTo(".artifact_drag", {
+    autoAlpha: 0
+  }, {
+    autoAlpha: 1
+  });
+});
+
+
+// Draggable to nodes
