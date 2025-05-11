@@ -148,7 +148,7 @@
     letter-spacing: calc(var(--base) / 2);
     line-height: 100%;
   }
-  button {
+  button, .fake_key_read {
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
@@ -657,9 +657,6 @@
     border-radius: 90px;
     z-index: -1;
   }
-  img#device_bg {
-    opacity: 0.75;
-  }
   .screen {
     position: relative;
     width: 100%;
@@ -806,20 +803,20 @@
     width: auto;
     height: var(--base);
   }
-  #insert {
+  #insert, .fake_key_read_insert {
     position: absolute;
     top: 0;
     left: 0;
     width: 100px;
     height: 100px;
-    margin: 0 0 0 60px;
+    margin: 0 0 0 55px;
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
     border-radius: 100%;
     background-color: var(--primary-15);
     clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
-    z-index: -3;
+    z-index: -3!important;
   }
   .screen_game {
     width: 100%;
@@ -845,13 +842,13 @@
     border-radius: 100%;
     background-color: var(--primary-100);
   }
-  .node:nth-child(1) {
-    bottom: 17.5%;
+  .node.one {
+    bottom: 17.25%;
     left: 10%;
   }
   .node.two {
-    opacity: 0.0!important;
-    bottom: 42.5%;
+    opacity: 0.0;
+    bottom: 42.75%;
     left: 35%;
   }
   .node:nth-child(3) {
@@ -991,15 +988,27 @@
     left: calc(calc(var(--base) * 2.2) + calc(var(--base) * 2.25));
     z-index: 7;
   }
-  .fake_key_read {
+  .fake_key_read_wrap {
     opacity: 0.0;
-    position: absolute;
-    top: 152.5px;
-    left: 35%;
-    width: auto;
-    height: auto;
-    background-color: var(--secondary-110);
+    position: fixed;
+    top: 126px;
+    left: 27.75%;
     z-index: 5;
+  }
+  .fake_key_read {
+    position: absolute;
+    top: 27.5px;
+    left: 130px;
+    width: 240px;
+    height: auto;
+    padding: var(--accent);
+    background-color: var(--secondary-110);
+  }
+  .fake_key_read_insert {
+    position: absolute;
+    top: 0;
+    left: 0;
+    clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);
   }
   .fake_key_read .time_icon {
     background-color: var(--secondary-110);
@@ -1012,7 +1021,7 @@
     position: absolute;
     top: 152.5px;
     left: 35%;
-    margin: 0; 
+    margin: -7.5px 0 0 0; 
     transform: translate3d(0, 0, 0);
     will-change: transform;
     width: auto;

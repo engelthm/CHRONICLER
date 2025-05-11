@@ -27,17 +27,17 @@ tippy("[title]", {
   
 // HOWLER.JS 
 // Background music
-const sound = new Howl({
-  src: "Assets/Audio/Ambient/Chronicler Background.mp3",
-  autoplay: true,
-  loop: true,
-  volume: 0.5, 
-  onplayerror: function() {
-    sound.once("unlock", function() {
-    sound.play();
-    });
-  }
-});
+// const sound = new Howl({
+//   src: "Assets/Audio/Ambient/Chronicler Background.mp3",
+//   autoplay: true,
+//   loop: true,
+//   volume: 0.5, 
+//   onplayerror: function() {
+//     sound.once("unlock", function() {
+//     sound.play();
+//     });
+//   }
+// });
 
 const playAudio = document.getElementById("play");
 const pauseAudio = document.getElementById("pause");
@@ -296,7 +296,7 @@ document.querySelector("#exitDirection").addEventListener("click", e => {
   });
   soundFlicker.play();
 
-  let deviceStagger = gsap.utils.toArray([".weather_title", ".weather_info .info", ".keys_inacitve_head h3", ".head_data", ".head_connect", ".foot_buttons", ".foot .id", ".node", ".game_insert"]);
+  let deviceStagger = gsap.utils.toArray([".weather_title", ".weather_info .info", ".keys_inacitve_head h3", ".head_data", ".head_connect", ".foot_buttons", ".foot .id", ".node.one", ".game_insert"]);
   device.fromTo(deviceStagger, {
     autoAlpha: 0, 
   }, {
@@ -406,10 +406,9 @@ Draggable.create(".fake_key", {
       });
       gsap.to(this.target, {
         duration: 0.5,
-        clipPath: "polygon(0 0, 35% 0, 35% 100%, 0 100%)"
       }, 0);
 
-      gsap.fromTo(".fake_key_read", {
+      gsap.fromTo(".fake_key_read_wrap", {
         autoAlpha: 0
       }, {
         autoAlpha: 1
@@ -418,17 +417,17 @@ Draggable.create(".fake_key", {
         duration: 1.5, 
         scrambleText: "Reading Key..."
       });
-      gsap.fromTo(".artifact_wrap", {
-        autoAlpha: 0
-      }, {
-        autoAlpha: 1, 
-        delay: 2.25
-      });
-      gsap.fromTo(".fake_key_read", {
+      gsap.fromTo(".fake_key_read_wrap", {
         autoAlpha: 1
       }, {
         autoAlpha: 0, 
         delay: 2
+      });
+      gsap.fromTo(".artifact_wrap", {
+        autoAlpha: 0
+      }, {
+        autoAlpha: 1, 
+        delay: 3
       });
     }
   }
@@ -486,6 +485,8 @@ Draggable.create(".artifact_drag", {
         ease: "back.out(1.7)" 
       });
     } else {
+      document.querySelector(".game_insert").style.visibility = "visible";
+
       const a = hitNode.getBoundingClientRect();
       const b = this.target.getBoundingClientRect();
       
@@ -493,22 +494,25 @@ Draggable.create(".artifact_drag", {
         x: this.x - (b.left - a.left),
         y: this.y - (b.top - a.top), 
       });
-      gsap.fromTo(".node.two", {
-        autoAlpha: 0
-      }, {
-        autoAlpha: 1
-      });
       gsap.fromTo(".fake_key", {
         autoAlpha: 1
       }, {
         autoAlpha: 0
       });
-      gsap.to(".node_connect", {
-      ease: "power4.inOut",
-        autoAlpha: 1,
-        scaleX: 1, 
+      gsap.fromTo(".node_connect", {
+        ease: "power4.inOut",
+        autoAlpha: 0,
+        scaleX: 0, 
         transformOrigin: "left center", 
-        duration: 1.5
+        duration: 7.5
+      }, {
+        autoAlpha: 1,
+        scaleX: 1,
+      });
+      gsap.fromTo(".node.two", {
+        autoAlpha: 0
+      }, {
+        autoAlpha: 1, 
       });
     }
   }
