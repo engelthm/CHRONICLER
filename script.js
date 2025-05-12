@@ -126,7 +126,7 @@ function loading(_success) {
 
 
 // GSAP
-gsap.registerPlugin(ScrollTrigger, ScrollSmoother, TextPlugin, ScrambleTextPlugin, Draggable, InertiaPlugin);
+gsap.registerPlugin(ScrollTrigger, ScrollSmoother, TextPlugin, ScrambleTextPlugin, Draggable);
 
 // On load
 let loader = gsap.timeline({
@@ -216,11 +216,10 @@ document.querySelector("#begin").addEventListener("click", e => {
 
   document.querySelector("#intro .time_icon").style.display = "flex";
 
-  typing("#log_time_intro", "The time is 09:04 Earth Standard Time.");
-  typing("#log_text_intro_1", "ASSIGNMENT LOG.");
-  typing("#log_text_intro_2", "My spacecraft has just landed on CERACUS IV. No technical difficulties as had been seen with CERACUS III. Wind speed is much less of a concern here, though upon entering the atmosphere, I was immediately met with heavy rainfall.");
-  typing("#log_text_intro_3", "Initial reports by H.U.G.O. show significant ocean on this moon, with three medium-sized landmasses. No activity suggests intelligent life can be found here anymore, though significant urban ruin has led me to the current landing point on the moon’s largest continent. I did have to maneuver manually during descent in order to avoid the remains of what appears to have once been a large dome, which has shattered outward. Potentially used to keep out the rain.");
-  typing("#log_text_intro_4", "The current plan is similar to my original CERACUS III plan before that all went to shit. Censor for the record. If Imperial architecture remains consistent, using records from my journey last month through the KORMENA SYSTEM, then the archives should be at the urban center.");
+  typing("#log_time_intro", "ASSIGNMENT LOG. The time is 09:04 Earth Standard Time.");
+  typing("#log_text_intro_1", "My spacecraft has just landed on CERACUS IV. No technical difficulties as had been seen with CERACUS III. Wind speed is much less of a concern here, though upon entering the atmosphere, I was immediately met with heavy rainfall.");
+  typing("#log_text_intro_2", "Initial reports by H.U.G.O. show significant ocean on this moon, with three medium-sized landmasses. No activity suggests intelligent life can be found here anymore, though significant urban ruin has led me to the current landing point on the moon’s largest continent. I did have to maneuver manually during descent in order to avoid the remains of what appears to have once been a large dome, which has shattered outward. Potentially used to keep out the rain.");
+  typing("#log_text_intro_3", "The current plan is similar to my original CERACUS III plan before that all went to shit. Censor for the record. If Imperial architecture remains consistent, using records from my journey last month through the KORMENA SYSTEM, then the archives should be at the urban center.");
 
   contCh1.addEventListener("click", e => {
     contCh1.style.display = "none";
@@ -288,15 +287,15 @@ document.querySelector("#exitDirection").addEventListener("click", e => {
     autoAlpha: 0
   });
 
-  const soundFlicker = new Howl({
+  const soundLoad = new Howl({
     src: "Assets/Audio/FX/Load.wav",
     autoplay: true,
     loop: false,
     volume: 0.75,
   });
-  soundFlicker.play();
+  soundLoad.play();
 
-  let deviceStagger = gsap.utils.toArray([".weather_title", ".weather_info .info", ".keys_inacitve_head h3", ".head_data", ".head_connect", ".foot_buttons", ".foot .id", ".node.one", ".game_insert"]);
+  let deviceStagger = gsap.utils.toArray([".weather_title", ".weather_info .info", ".keys_inacitve_head h3", ".head_data", ".head_connect", ".foot_buttons", ".foot .id", ".node.one", ".game_insert", ".insert"]);
   device.fromTo(deviceStagger, {
     autoAlpha: 0, 
   }, {
@@ -321,16 +320,6 @@ document.querySelector("#exitDirection").addEventListener("click", e => {
     },
   }, 3.5);
 });
-
-
-// gsap.fromTo("#node", {
-//   scale: 1
-// }, {
-//   scale: 1.25,
-//   duration: 2.5, 
-//   repeat: -1, 
-//   ease: "power4.inOut"
-// });
 
 document.querySelector("#enterDirection").addEventListener("click", e => {
   device.fromTo(".device_direction", {
@@ -377,6 +366,7 @@ Draggable.create(".fake_key", {
     const hit = this.hitTest(hitArea);
     if(!hit) {
       removeClass(this.target, "highlight");
+      document.querySelector(".insert").style.opacity = "1.0";
       document.querySelector(".game_insert").style.visibility = "visible";
 
       gsap.to(this.target,{ 
@@ -387,6 +377,7 @@ Draggable.create(".fake_key", {
       });
     } else {
       addClass(this.target, "highlight");
+      document.querySelector(".insert").style.opacity = "0.0";
       document.querySelector(".game_insert").style.visibility = "hidden";
 
       const soundInsert = new Howl({
@@ -440,6 +431,7 @@ document.querySelector("#close").addEventListener("click", e => {
     autoAlpha: 0
   });
   removeClass(this.target, "highlight");
+  document.querySelector(".insert").style.opacity = "1.0";
   document.querySelector(".game_insert").style.visibility = "visible";
 
   gsap.to(this.target,{ 
@@ -470,7 +462,6 @@ Draggable.create(".artifact_drag", {
   bounds: ".device",
   dragResistance: 0,
   type: "x,y",
-  inertia: false,
   force3D: true,
   edgeResistance: 0.65,
   throwResistance: 1000,
@@ -485,7 +476,16 @@ Draggable.create(".artifact_drag", {
         ease: "back.out(1.7)" 
       });
     } else {
+      document.querySelector(".insert").style.opacity = "1.0";
       document.querySelector(".game_insert").style.visibility = "visible";
+
+      const soundNode = new Howl({
+        src: "Assets/Audio/FX/Interface_Zoom.wav",
+        autoplay: false,
+        loop: false,
+        volume: 0.75,
+      });
+      soundNode.play();
 
       const a = hitNode.getBoundingClientRect();
       const b = this.target.getBoundingClientRect();
@@ -504,7 +504,7 @@ Draggable.create(".artifact_drag", {
         autoAlpha: 0,
         scaleX: 0, 
         transformOrigin: "left center", 
-        duration: 7.5
+        duration: 12.5
       }, {
         autoAlpha: 1,
         scaleX: 1,
@@ -513,6 +513,7 @@ Draggable.create(".artifact_drag", {
         autoAlpha: 0
       }, {
         autoAlpha: 1, 
+        delay: 0.25
       });
     }
   }

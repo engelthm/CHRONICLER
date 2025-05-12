@@ -148,7 +148,7 @@
     letter-spacing: calc(var(--base) / 2);
     line-height: 100%;
   }
-  button, .fake_key_read {
+  button, .fake_key_read, .artifact_drag {
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
@@ -418,7 +418,7 @@
     align-items: center;
     row-gap: var(--base);
     background-color: var(--secondary-75);
-    /* backdrop-filter: var(--blur); */
+    backdrop-filter: var(--blur);
     z-index: 200;
   }
   .direction {
@@ -437,7 +437,7 @@
     width: 100%;
     padding: var(--base);
   }
-  .weather_title, .weather_info .info, .keys_inacitve_head h3, .key, .head_data, .head_connect, .foot_buttons, .foot .id, .node, .game_insert {
+  .weather_title, .weather_info .info, .keys_inacitve_head h3, .key, .head_data, .head_connect, .foot_buttons, .foot .id, .node, .game_insert, .insert {
     opacity: 0.0;
   }
 
@@ -493,6 +493,10 @@
     border: var(--border);
     border-radius: var(--corners);
     background-color: var(--primary-15);
+    background-image: url("Assets/Images/Device/Panel 2.png");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
   }
   .weather_title {
     writing-mode: sideways-lr;
@@ -559,10 +563,14 @@
     border: var(--border);
     border-radius: var(--corners);
     background-color: var(--primary-15);
+    background-image: url("Assets/Images/Device/Panel 3.png");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
   }
   #keys_wrap {
     width: auto;
-    height: 70vh;
+    height: 73.75vh;
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
@@ -574,6 +582,10 @@
     background-color: var(--primary-15);
     overflow-x: hidden;
     overflow-y: scroll;
+    background-image: url("Assets/Images/Device/Panel.png");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
   }
   .key {
     position: relative;
@@ -585,7 +597,6 @@
   .fake_key.highlight {
     z-index: 4!important;
     margin: 0 0 0 -157px;
-    /* clip-path: polygon(0 0, 35% 0, 35% 100%, 0 100%); */
   }
   .key img {
     position: relative;
@@ -603,6 +614,11 @@
     flex-flow: row-reverse nowrap;
     align-items: center;
     justify-content: flex-end;
+  }
+  .clone {
+    position: absolute;
+    opacity: 0;
+    visibility: hidden;
   }
   .input_icon {
     position: relative;
@@ -795,6 +811,7 @@
     left: -98px;
     width: 200px;
     height: 100px;
+    z-index: -3!important;
   }
   .insert {
     padding: 0 0 0 calc(var(--base) * 1.5);
@@ -816,7 +833,6 @@
     border-radius: 100%;
     background-color: var(--primary-15);
     clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
-    z-index: -3!important;
   }
   .screen_game {
     width: 100%;
@@ -984,8 +1000,8 @@
   /* Fake key */
   .fake_key {
     position: fixed;
-    bottom: calc(calc(var(--base) * 2.35) + calc(var(--base) * 2.25));;
-    left: calc(calc(var(--base) * 2.2) + calc(var(--base) * 2.25));
+    bottom: calc(var(--base) * 4.1);;
+    left: calc(var(--base) * 4.45);
     z-index: 7;
   }
   .fake_key_read_wrap {
@@ -1021,7 +1037,7 @@
     position: absolute;
     top: 152.5px;
     left: 35%;
-    margin: -7.5px 0 0 0; 
+    padding: var(--accent);
     transform: translate3d(0, 0, 0);
     will-change: transform;
     width: auto;
